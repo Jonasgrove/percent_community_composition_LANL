@@ -13,7 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 
 # INSERT PATH TO REPO ON COMPUTER HERE 
-setwd("/Users/jonasgrove/Projects/pond_crashers/percent_composition_figure")
+setwd("C:/Users/Sam Koehler/Desktop/University of Oregon/07 - Bi624/Assignments/Winter Break Figures/percent_community_composition_LANL-master")
+
 
 ### HEALTHY PONDS
 ## algae52 ###### ###### ###### ###### ###### ######
@@ -97,7 +98,7 @@ species_comp <- function(num_species, classification){
   }
   # calculate and assign remaining percent community
   remaining <- 100 - percent_selected
-  algae52_tops[num_species + 1, c(classification, "percent_community")] <- c("remaining", remaining) 
+  algae52_tops[num_species + 1, c(classification, "percent_community")] <- c("Unclassified", remaining) 
   algae52_tops$pond <- rep(c("Healthy1"), num_species + 1)
   
   # algae 53 top two species and percentages
@@ -110,7 +111,7 @@ species_comp <- function(num_species, classification){
   }
   # calculate and assign remaining percent community
   remaining <- 100 - percent_selected
-  algae53_tops[num_species + 1, c(classification, "percent_community")] <- c("remaining", remaining) 
+  algae53_tops[num_species + 1, c(classification, "percent_community")] <- c("Unclassified", remaining) 
   algae53_tops$pond <- rep(c("Healthy2"), num_species + 1)
   
   # algae 114 top two species and percentages
@@ -123,7 +124,7 @@ species_comp <- function(num_species, classification){
   }
   # calculate and assign remaining percent community
   remaining <- 100 - percent_selected
-  algae114_tops[num_species + 1, c(classification, "percent_community")] <- c("remaining", remaining) 
+  algae114_tops[num_species + 1, c(classification, "percent_community")] <- c("Unclassified", remaining) 
   algae114_tops$pond <- rep(c("Sick1"), num_species + 1)
   
   # algae 115 top two species and percentages
@@ -136,7 +137,7 @@ species_comp <- function(num_species, classification){
   }
   # calculate and assign remaining percent community
   remaining <- 100 - percent_selected
-  algae115_tops[num_species + 1, c(classification, "percent_community")] <- c("remaining", remaining) 
+  algae115_tops[num_species + 1, c(classification, "percent_community")] <- c("Unclassified", remaining) 
   algae115_tops$pond <- rep(c("Sick2"), num_species + 1)
   
   # combine sick and healthy ponds
@@ -174,7 +175,8 @@ species_comp <- function(num_species, classification){
           axis.title.y = element_text(size = 20),
           axis.text.x = element_text(size = 15),
           axis.text.y = element_text(size = 15),
-          legend.text = element_text(size = 15))
+          legend.text = element_text(size = 15))+
+    scale_fill_brewer(palette="Spectral")
 
 }
 ```
