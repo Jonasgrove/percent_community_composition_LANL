@@ -1,0 +1,204 @@
+---
+title: "Algal Pond Community Composition"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE}
+# libraries
+library(ggplot2)
+
+# INSERT PATH TO REPO ON COMPUTER HERE 
+setwd("C:/Users/Sam Koehler/Desktop/University of Oregon/07 - Bi624/Assignments/Winter Break Figures/percent_community_composition_LANL-master")
+
+
+### HEALTHY PONDS
+## algae52 ###### ###### ###### ###### ###### ######
+algae_52_gtbtk_path <- "gtdbtk_algae52.tsv"
+algae_52_checkm_path <- "profile_algae52.tsv"
+
+# data
+algae_52_gtbtk_data <- read.table(algae_52_gtbtk_path, sep = "\t")
+algae_52_checkm_data <- read.table(algae_52_checkm_path, header = TRUE, sep = "\t")
+
+# merge dataframes
+algae52_combined <- merge(algae_52_gtbtk_data, algae_52_checkm_data, by.x = "V1", by.y = "Bin.Id")
+colnames(algae52_combined) <- c("user_genome","domain", "phyllum", "class", "order", "family", "genus", "species","bin_size","mapped_reads","pecent_mapped","percent_binned","percent_community")
+
+# sort dataframe
+algae52_sorted <- algae52_combined[order(algae52_combined$percent_community, decreasing = TRUE),]
+
+## algae53 ###### ###### ###### ###### ###### ######
+algae_53_gtbtk_path <- "gtdbtk_algae53.tsv"
+algae_53_checkm_path <- "profile_algae53.tsv"
+
+# data
+algae_53_gtbtk_data <- read.table(algae_53_gtbtk_path, sep = "\t")
+algae_53_checkm_data <- read.table(algae_53_checkm_path, header = TRUE, sep = "\t")
+
+# merge dataframes
+algae53_combined <- merge(algae_53_gtbtk_data, algae_53_checkm_data, by.x = "V1", by.y = "Bin.Id")
+colnames(algae53_combined) <- c("user_genome","domain", "phyllum", "class", "order", "family", "genus", "species","bin_size","mapped_reads","pecent_mapped","percent_binned","percent_community")
+
+# sort dataframe
+algae53_sorted <- algae53_combined[order(algae53_combined$percent_community, decreasing = TRUE),]
+
+
+
+### SICK PONDS
+## algae114 ###### ###### ###### ###### ###### ######
+algae_114_gtbtk_path <- "gtdbtk_algae114.tsv"
+algae_114_checkm_path <- "profile_algae114.tsv"
+
+# data
+algae_114_gtbtk_data <- read.table(algae_114_gtbtk_path, sep = "\t")
+algae_114_checkm_data <- read.table(algae_114_checkm_path, header = TRUE, sep = "\t")
+
+# merge dataframes
+algae114_combined <- merge(algae_114_gtbtk_data, algae_114_checkm_data, by.x = "V1", by.y = "Bin.Id")
+colnames(algae114_combined) <- c("user_genome","domain", "phyllum", "class", "order", "family", "genus", "species","bin_size","mapped_reads","pecent_mapped","percent_binned","percent_community")
+
+# sort dataframe
+algae114_sorted <- algae114_combined[order(algae114_combined$percent_community, decreasing = TRUE),]
+
+## algae115 ###### ###### ###### ###### ###### ######
+algae_115_gtbtk_path <- "gtdbtk_algae115.tsv"
+algae_115_checkm_path <- "profile_algae115.tsv"
+
+# data
+algae_115_gtbtk_data <- read.table(algae_115_gtbtk_path, sep = "\t")
+algae_115_checkm_data <- read.table(algae_115_checkm_path, header = TRUE, sep = "\t")
+
+# merge dataframes
+algae115_combined <- merge(algae_115_gtbtk_data, algae_115_checkm_data, by.x = "V1", by.y = "Bin.Id")
+colnames(algae115_combined) <- c("user_genome","domain", "phyllum", "class", "order", "family", "genus", "species","bin_size","mapped_reads","pecent_mapped","percent_binned","percent_community")
+
+# sort dataframe
+algae115_sorted <- algae115_combined[order(algae115_combined$percent_community, decreasing = TRUE),]
+
+#num_species <- 5
+
+num_species <- 30
+classification <- "phyllum"
+
+
+species_comp <- function(num_species, classification){
+
+  # algae 52 top two species and percentages
+  algae52_tops <- algae52_sorted[1:num_species,c(classification, "percent_community")]
+  
+  # sum what percent of community was selected
+  percent_selected <- 0
+  for (i in seq(num_species)){
+    percent_selected <- percent_selected + as.numeric(algae52_tops[i,"percent_community"])
+  }
+  # calculate and assign remaining percent community
+  remaining <- 100 - percent_selected
+  algae52_tops[num_species + 1, c(classification, "percent_community")] <- c("Unclassified", remaining) 
+  algae52_tops$pond <- rep(c("Healthy1"), num_species + 1)
+  
+  # algae 53 top two species and percentages
+  algae53_tops <- algae53_sorted[1:num_species,c(classification, "percent_community")]
+  
+  # sum what percent of community was selected
+  percent_selected <- 0
+  for (i in seq(num_species)){
+    percent_selected <- percent_selected + as.numeric(algae53_tops[i,"percent_community"])
+  }
+  # calculate and assign remaining percent community
+  remaining <- 100 - percent_selected
+  algae53_tops[num_species + 1, c(classification, "percent_community")] <- c("Unclassified", remaining) 
+  algae53_tops$pond <- rep(c("Healthy2"), num_species + 1)
+  
+  # algae 114 top two species and percentages
+  algae114_tops <- algae114_sorted[1:num_species,c(classification, "percent_community")]
+  
+  # sum what percent of community was selected
+  percent_selected <- 0
+  for (i in seq(num_species)){
+    percent_selected <- percent_selected + as.numeric(algae114_tops[i,"percent_community"])
+  }
+  # calculate and assign remaining percent community
+  remaining <- 100 - percent_selected
+  algae114_tops[num_species + 1, c(classification, "percent_community")] <- c("Unclassified", remaining) 
+  algae114_tops$pond <- rep(c("Sick1"), num_species + 1)
+  
+  # algae 115 top two species and percentages
+  algae115_tops <- algae115_sorted[1:num_species,c(classification, "percent_community")]
+  
+  # sum what percent of community was selected
+  percent_selected <- 0
+  for (i in seq(num_species)){
+    percent_selected <- percent_selected + as.numeric(algae114_tops[i,"percent_community"])
+  }
+  # calculate and assign remaining percent community
+  remaining <- 100 - percent_selected
+  algae115_tops[num_species + 1, c(classification, "percent_community")] <- c("Unclassified", remaining) 
+  algae115_tops$pond <- rep(c("Sick2"), num_species + 1)
+  
+  # combine sick and healthy ponds
+  all_ponds <- data.frame()
+  
+  # add algae52 
+  start <- 1
+  end <- num_species + 1
+  all_ponds[start:end, 1:3] <- algae52_tops
+  
+  # add algae53
+  start <- end + 1
+  end <- start + num_species 
+  all_ponds[start:end, 1:3] <- algae53_tops
+  
+  # add algae114
+  start <- end + 1
+  end <- start + num_species 
+  all_ponds[start:end,1:3] <- algae114_tops
+  
+  # algae 115
+  start <- end + 1
+  end <- start + num_species 
+  all_ponds[start:end,1:3] <- algae115_tops
+  
+  # make scale 0-1
+  all_ponds$percent_community <- as.numeric(all_ponds$percent_community)/100
+    
+  # Stacked + percent
+  ggplot(all_ponds, aes_string(fill=classification, y="percent_community", x="pond")) + 
+    geom_bar(position="fill", stat="identity") + 
+    labs(title = "N. oceanica Pond Composition", y = "Percent Community", x = "Pond Sample") +
+    theme(title = element_text(size = 25), 
+          axis.title.x = element_text(size = 20), 
+          axis.title.y = element_text(size = 20),
+          axis.text.x = element_text(size = 15),
+          axis.text.y = element_text(size = 15),
+          legend.text = element_text(size = 15))+
+    scale_fill_brewer(palette="Spectral")
+
+}
+```
+
+
+
+
+
+```{r echo=FALSE}
+inputPanel(
+  selectInput("classification", label = " Classification:",
+              choices = c("domain", "phyllum", "class", "order", "family", "genus", "species"),
+              selected = "phyllum"),
+  selectInput("n_species", label = "Number of Bins:",
+              choices = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), 
+              selected = 3))
+
+renderPlot({
+  species_comp(as.numeric(input$n_species), input$classification)
+})
+```
+
+##### The above figure shows the percent community composition of each Nannochloropsis oceanica pond. Classification and quantification were determined by gtdbtk and checkm, respectively. If a classification option is chosen where some bins did not have sufficient resolution to meet the classification, those bins are put into the category **x\_\_**, where **x** is the chosen classification. The category **remaining** represents the percentage of pond composition that was not annotated in the analysis pipeline, or not included in the chosen number of bins. 
+
+
